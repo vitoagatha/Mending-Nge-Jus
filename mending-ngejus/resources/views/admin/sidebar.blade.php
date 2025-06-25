@@ -24,7 +24,6 @@
                 <li><a href="{{url('view_product')}}">View Product</a></li>
             </ul>
         </li>
-        <li><a href="login.html"> <i class="icon-logout"></i>Logout</a></li>
-
+        
     </ul>
 </nav>
