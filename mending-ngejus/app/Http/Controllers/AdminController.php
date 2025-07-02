@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Order;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use function Laravel\Prompts\search;
 
@@ -169,5 +171,44 @@ class AdminController extends Controller
         $product = Product::where('title', 'LIKE', '%' .$search. '%')->orWhere('category', 'LIKE', '%' .$search. '%')->paginate(3);
 
         return view('admin.view_product', compact('product'));
+    }
+
+    public function view_order()
+    {
+
+        $data = Order::all();
+
+        return view('admin.order', compact('data'));
+    }
+
+    public function on_the_way($id)
+    {
+        $data = Order::find($id);
+
+        $data->status = 'On the way';
+
+        $data->save();
+
+        return redirect('/view_orders');
+    }
+
+    public function delivered($id)
+    {
+        $data = Order::find($id);
+
+        $data->status = 'Delivered';
+
+        $data->save();
+
+        return redirect('/view_orders');
+    }
+
+    public function print_pdf($id)
+    {
+        $data = Order::find($id);
+
+        $pdf = Pdf::loadView('admin.invoice', compact('data'));
+
+        return $pdf->download('invoice.pdf');
     }
 }
